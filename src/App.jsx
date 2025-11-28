@@ -7,6 +7,7 @@ import Favorites from "./components/favorites/Favorites.jsx";
 import AboutUs from "./components/about-us/AboutUs.jsx";
 import ContactUs from "./components/contact-us/ContactUs.jsx";
 import Login from "./components/login/Login.jsx";
+import MovieDetails from "./components/movie-details/MovieDetails.jsx";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Dashboard/>}/>
 				<Route path="/favorite-movies" element={<Favorites/>}/>
+				<Route path="/movie/:movieId/details" element={<MovieDetails/>}/>
 				<Route path="/about-us" element={<AboutUs/>}/>
 				<Route path="/contact-us" element={<ContactUs/>}/>
 				<Route path="/login" element={<Login/>}/>

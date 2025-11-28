@@ -1,0 +1,72 @@
+import { Link, useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { apiKey, baseURL } from "../../configs/api.js";
+
+const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
+const IMAGE_RESOLUTION = 'w500';
+
+const initialMovie = {
+	title: '',
+	release_date: '',
+	poster_path: '',
+	genres: [],
+	overview: '',
+	homepage: ''
+}
+
+export default function MovieDetails() {
+	const { movieId } = useParams();
+	const [movie, setMovie] = useState(initialMovie)
+
+	useEffect(() => {
+		fetch(`${baseURL}movie/${movieId}?${apiKey}`)
+			.then(res => res.json())
+			.then(res => setMovie(res))
+			.catch(error => console.log(error));
+	}, [movieId]);
+
+	const posterPath = movie.poster_path
+		? BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path
+		: '';
+
+	const genreNames = movie.genres.map(g => g.name).join(', ');
+
+
+	return (
+		<div className="container w-50">
+			<h3 className="panel-title mt-5">
+				{ movie.title }
+			</h3>
+
+			{posterPath && (
+				<img
+					src={posterPath}
+					alt={movie.title}
+					className="thumbnail"
+					width="100%"
+				/>
+			)}
+
+			<ul className="list-group">
+				<li className="list-group-item">
+					Genres: <span>{genreNames}</span>
+				</li>
+
+				<li className="list-group-item">
+					Release Date: {movie.release_date}
+				</li>
+				<li className="list-group-item">
+					Overview: {movie.overview}
+				</li>
+
+
+				<a href={movie.homepage}
+					  target="_blank"
+					  className="btn btn-outline-primary mt-2 mb-5"
+				>
+					Visit Movie Website
+				</a>
+			</ul>
+		</div>
+	);
+}
