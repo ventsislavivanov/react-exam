@@ -1,13 +1,29 @@
 import { Route, Routes } from "react-router";
 
+import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer.jsx";
+import Dashboard from "./components/dashboard/Dashboard.jsx";
+import Favorites from "./components/favorites/Favorites.jsx";
+import AboutUs from "./components/about-us/AboutUs.jsx";
+import ContactUs from "./components/contact-us/ContactUs.jsx";
+import Login from "./components/login/Login.jsx";
+
 function App() {
 
 	return (
 		<>
-			<h1>test</h1>
+			<Header/>
+
 			<Routes>
-				<Route path="/" element={<h2>Home</h2>} />
+				<Route path="/" element={<Dashboard/>}/>
+				<Route path="/favorite-movies" element={<Favorites/>}/>
+				<Route path="/about-us" element={<AboutUs/>}/>
+				<Route path="/contact-us" element={<ContactUs/>}/>
+				<Route path="/login" element={<Login/>}/>
+				<Route path="/sign-up" element={<Login/>}/>
 			</Routes>
+
+			<Footer />
 		</>
 	)
 }
