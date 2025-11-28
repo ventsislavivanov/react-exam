@@ -1,4 +1,4 @@
-import FormFieldset from "../../form-fieldset/FormFieldset.jsx";
+import FormFieldset from "../../form-elements/fieldset/FormFieldset.jsx";
 import { Link } from "react-router";
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
 				>
 					<h3 className="text-center mb-4">Login</h3>
 
-					<form>
+					<form action={loginHandler}>
 						<FormFieldset icon={['fas', 'user']}
 									  label="Email"
 									  name="email"
