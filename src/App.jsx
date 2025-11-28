@@ -6,7 +6,8 @@ import Dashboard from "./components/dashboard/Dashboard.jsx";
 import Favorites from "./components/favorites/Favorites.jsx";
 import AboutUs from "./components/about-us/AboutUs.jsx";
 import ContactUs from "./components/contact-us/ContactUs.jsx";
-import Login from "./components/login/Login.jsx";
+import Login from "./components/auth/login/Login.jsx";
+import SignUp from "./components/auth/sign-up/SignUp.jsx";
 import MovieDetails from "./components/movie-details/MovieDetails.jsx";
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
 				<Route path="/about-us" element={<AboutUs/>}/>
 				<Route path="/contact-us" element={<ContactUs/>}/>
 				<Route path="/login" element={<Login/>}/>
-				<Route path="/sign-up" element={<Login/>}/>
+				<Route path="/sign-up" element={<SignUp/>}/>
 			</Routes>
 
 			<Footer />

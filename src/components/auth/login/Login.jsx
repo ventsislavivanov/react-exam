@@ -1,4 +1,4 @@
-import FormFieldset from "../form-fieldset/FormFieldset.jsx";
+import FormFieldset from "../../form-fieldset/FormFieldset.jsx";
 import { Link } from "react-router";
 
 export default function Login() {
@@ -30,12 +30,15 @@ export default function Login() {
 								   placeholder="Place enter password..."
 							/>
 						</FormFieldset>
-						<button type="submit" className="btn btn-primary w-100">Login</button>
+
+						<button type="submit"
+								className="btn btn-primary w-100"
+						>Login</button>
 					</form>
 
 					<p className="text-center mt-3">
 						Don't have an account?
-						<Link to={'sign-up'}>Sign up </Link>
+						<Link to="/sign-up">Sign up</Link>
 					</p>
 				</div>
 			</div>
