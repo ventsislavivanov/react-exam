@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export default function FormInput({
 	type = 'text',
 	name,
@@ -5,7 +7,10 @@ export default function FormInput({
 	rules,
 	register,
 	formState,
-	getFieldState
+	getFieldState,
+	label,
+	icon = [],
+	disabled,
 }) {
 	const { errors, isSubmitted } = formState;
 
@@ -18,13 +23,44 @@ export default function FormInput({
 
 	const invalidIf = (field) => isInvalid(field) && 'is-invalid';
 
+	const fieldErrors = (field) => {
+		const { isTouched } = getFieldState(field, formState);
+
+		if (!isTouched && !isSubmitted) return [];
+
+		const types = errors[field]?.types || {};
+		return Object.entries(types).map(([key, message]) => ({
+			$uid: `${field}-${key}`,
+			$message: message,
+		}));
+	};
+
 	return (
-		<input
-			type={type}
-			id={name}
-			placeholder={placeholder}
-			{...register(name, rules)}
-			className={cx('form-control', invalidIf(name))}
-		/>
+		<div className="form-group mb-3">
+			{label && (
+				<label htmlFor={name} className="control-label">{label}</label>
+			)}
+
+			<div className="input-group">
+				{icon.length > 0 && (
+					<span className="input-group-text">
+						<FontAwesomeIcon icon={icon} />
+					</span>
+				)}
+
+				<input
+					type={type}
+					id={name}
+					placeholder={placeholder}
+					{...register(name, rules)}
+					className={cx('form-control', invalidIf(name))}
+					disabled={disabled}
+				/>
+			</div>
+
+			{fieldErrors(name).map((e) => (
+				<div key={e.$uid} className="invalid-feedback d-block">{e.$message}</div>
+			))}
+		</div>
 	);
 }

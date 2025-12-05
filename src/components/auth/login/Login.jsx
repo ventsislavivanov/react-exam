@@ -1,4 +1,3 @@
-import FormFieldset from "../../form-elements/fieldset/FormFieldset.jsx";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
@@ -18,7 +17,6 @@ export default function Login() {
 		reValidateMode: 'onChange',
 		criteriaMode: 'all'
 	});
-	const { errors, isSubmitted } = formState;
 
 	const loginHandler = (data) => {
 		console.log(data);
@@ -28,19 +26,6 @@ export default function Login() {
 	const onInvalid = (errors) => {
 		console.log(errors);
 	}
-
-	const fieldErrors = (field) => {
-		const { isTouched } = getFieldState(field, formState);
-		if (!isTouched && !isSubmitted) {
-			return [];
-		}
-
-		const types = errors[field]?.types || {};
-		return Object.entries(types).map(([key, message]) => ({
-			$uid: `${field}-${key}`,
-			$message: message,
-		}));
-	};
 
 	const buildFieldRules = {
 		email: {
@@ -66,37 +51,28 @@ export default function Login() {
 					<h3 className="text-center mb-4">Login</h3>
 
 					<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
-						<FormFieldset icon={['fas', 'user']}
-									  label="Email"
-									  id="email"
-									  errors={fieldErrors('email')}
-						>
-							<FormInput
-								name="email"
-								placeholder="Place enter email..."
-								rules={buildFieldRules.email}
-								register={register}
-								formState={formState}
-								getFieldState={getFieldState}
-							/>
+						<FormInput
+							name="email"
+							rules={buildFieldRules.email}
+							placeholder="Place enter email..."
+							label="Email"
+							icon={['fas', 'user']}
+							register={register}
+							formState={formState}
+							getFieldState={getFieldState}
+						/>
 
-						</FormFieldset>
-
-						<FormFieldset icon={['fas', 'lock']}
-									  label="Password"
-									  id="password"
-									  errors={fieldErrors('password')}
-						>
-							<FormInput
-								type="password"
-								name="password"
-								placeholder="Place enter password..."
-								rules={buildFieldRules.password}
-								register={register}
-								formState={formState}
-								getFieldState={getFieldState}
-							/>
-						</FormFieldset>
+						<FormInput
+							type="password"
+							name="password"
+							rules={buildFieldRules.password}
+							placeholder="Place enter password..."
+							label="Password"
+							icon={['fas', 'lock']}
+							register={register}
+							formState={formState}
+							getFieldState={getFieldState}
+						/>
 
 						<button type="submit"
 								className="btn btn-primary w-100"

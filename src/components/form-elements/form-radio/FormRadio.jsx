@@ -15,32 +15,37 @@ export default function FormRadio({
 
 	const showError = (isTouched || isSubmitted) && errors[name];
 
-	// за criteriaMode: 'all' – извличаме всички съобщения
-	const messages = Object.values(errors[name]?.types || (errors[name]?.message ? { _single: errors[name].message } : {}));
+	const messages = Object.values(
+		errors[name]?.types ||
+		(errors[name]?.message ? { _single: errors[name].message } : {})
+	);
 
 	return (
-		<div className="mb-3">
+		<div className="form-group mb-3">
 			<label className="form-label" style={{ paddingLeft: 5 }}>
 				{label ?? name}
 			</label>
 			<br />
 
-			{options.map((option) => {
+			{options.map((option, idx) => {
 				const id = `${groupId}-${option}`;
+				const regProps = idx === 0 ? register(name, rules) : register(name)
+
 				return (
 					<div key={option} className="form-check">
 						<input
 							type="radio"
 							id={id}
 							value={option}
-							// важно: едно и също име за групата
-							{...register(name, rules)}
+							name={name}
+							{...regProps}
 							className={[
 								'form-check-input',
 								showError ? 'is-invalid' : null,
 							].filter(Boolean).join(' ')}
 							aria-invalid={showError ? 'true' : undefined}
 						/>
+
 						<label htmlFor={id} className="form-check-label" style={{ paddingLeft: 5 }}>
 							{option}
 						</label>
