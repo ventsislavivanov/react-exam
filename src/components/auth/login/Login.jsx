@@ -42,6 +42,21 @@ export default function Login() {
 		}));
 	};
 
+	const buildFieldRules = {
+		email: {
+			required: 'Email is required',
+			minLength: { value: 6, message: 'Email must be at least 8 characters long' },
+			pattern: {
+				value: /\S+@\S+\.\S+/,
+				message: "Entered value does not match email format",
+			}
+		},
+		password: {
+			required: 'Password is required',
+			minLength: { value: 3, message: 'Password must be at least 3 characters long' }
+		}
+	};
+
 	return (
 		<div className="container">
 			<div className="container vh-100 d-flex justify-content-center align-items-center">
@@ -59,14 +74,7 @@ export default function Login() {
 							<FormInput
 								name="email"
 								placeholder="Place enter email..."
-								rules={{
-									required: 'Email is required',
-									minLength: { value: 6, message: 'Email must be at least 8 characters long' },
-									pattern: {
-										value: /\S+@\S+\.\S+/,
-										message: "Entered value does not match email format",
-									}
-								}}
+								rules={buildFieldRules.email}
 								register={register}
 								formState={formState}
 								getFieldState={getFieldState}
@@ -83,13 +91,7 @@ export default function Login() {
 								type="password"
 								name="password"
 								placeholder="Place enter password..."
-								rules={{
-									required: 'Password is required',
-									minLength: {
-										value: 3,
-										message: 'Password must be at least 3 characters long'
-									}
-								}}
+								rules={buildFieldRules.password}
 								register={register}
 								formState={formState}
 								getFieldState={getFieldState}
