@@ -1,7 +1,6 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { apiKey, baseURL } from "../../configs/api.js";
-
+import { getMovieDetails } from "../../services/movieServices.js";
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';
 
@@ -19,10 +18,11 @@ export default function MovieDetails() {
 	const [movie, setMovie] = useState(initialMovie)
 
 	useEffect(() => {
-		fetch(`${baseURL}movie/${movieId}?${apiKey}`)
-			.then(res => res.json())
-			.then(res => setMovie(res))
-			.catch(error => console.log(error));
+		async function fetchMovie() {
+			setMovie(await getMovieDetails(movieId));
+		}
+
+		fetchMovie()
 	}, [movieId]);
 
 	const posterPath = movie.poster_path

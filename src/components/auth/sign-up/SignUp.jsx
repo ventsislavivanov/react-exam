@@ -169,7 +169,7 @@ export default function SignUp() {
 											register={register}
 											formState={formState}
 											getFieldState={getFieldState}
-									/>
+										/>
 									</div>
 
 									<div className="col-md-12">

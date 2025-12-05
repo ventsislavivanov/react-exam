@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import MovieCard from "../movie-card/MovieCard.jsx";
-import { baseURL, apiKey } from "../../configs/api.js";
-
-const POPULAR = 'discover/movie?sort_by=popularity.desc';
-const IN_THEATER = 'discover/movie?primary_release_date.gte=2019-01-01&primary_release_date.lte=2019-01-31';
-const KIDS = 'discover/movie?certification_country=US&certification.lte=G&sort_by=popularity.desc';
-const BEST_DRAMA = 'discover/movie?with_genres=18&primary_release_year=2019';
+import {
+	getBestDramaMovies,
+	getInTheaterMovies,
+	getKidsMovies,
+	getPopularMovies,
+} from "../../services/movieServices.js";
 
 export default function Dashboard() {
 	const [bestDramaMovies, setBestDramaMovies] = useState([]);
@@ -14,37 +14,16 @@ export default function Dashboard() {
 	const [inTheaterMovies, setInTheaterMovies] = useState([]);
 
 	useEffect(() => {
-	    fetch(baseURL + POPULAR + `&${apiKey}`)
-	        .then(res => res.json())
-	        .then(res => {
-				setPopularMoviesMovies(res.results.slice(0, 6));
-	        })
-			.catch(error => console.log(error));
+		async function fetchMovies() {
+			setBestDramaMovies(await getBestDramaMovies())
+			setPopularMoviesMovies(await getPopularMovies());
+			setKidsMovies(await getKidsMovies());
+			setInTheaterMovies(await getInTheaterMovies());
+		}
+
+		fetchMovies();
 	}, []);
-	useEffect(() => {
-		fetch(baseURL + IN_THEATER + `&${apiKey}`)
-			.then(res => res.json())
-			.then(res => {
-				setInTheaterMovies(res.results.slice(0, 6));
-			})
-			.catch(error => console.log(error));
-	}, []);
-	useEffect(() => {
-		fetch(baseURL + BEST_DRAMA + `&${apiKey}`)
-			.then(res => res.json())
-			.then(res => {
-				setBestDramaMovies(res.results.slice(0, 6));
-			})
-			.catch(error => console.log(error));
-	}, []);
-	useEffect(() => {
-		fetch(baseURL + KIDS + `&${apiKey}`)
-			.then(res => res.json())
-			.then(res => {
-				setKidsMovies(res.results.slice(0, 6));
-			})
-			.catch(error => console.log(error));
-	}, []);
+
 
 	return (
 		<>
