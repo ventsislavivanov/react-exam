@@ -1,7 +1,7 @@
-// import { validationRules } from "../../../helpers/validationRules.js";
-import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
 import { useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
+import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
+import { validationRules as vr} from "../../../helpers/validationRules.js";
 
 const intialValues = {
 	fullName: '',
@@ -9,8 +9,6 @@ const intialValues = {
 	password: '',
 	confirmPassword: '',
 	pin: '',
-	phoneCode: '+359',
-	phone: '',
 	address: '',
 	dob: ''
 }
@@ -71,11 +69,8 @@ export default function SignUp() {
 			})
 		},
 		pin: {
-			required: 'Phone number is required',
-			pattern: {
-				value: /^\d{9}$/,
-				message: 'Invalid phone number'
-			},
+			required: 'EGN is required',
+			validate: (val) => vr.egn(val) || 'Invalid EGN'
 		},
 		address: {
 			required: 'Address is required'
@@ -154,6 +149,7 @@ export default function SignUp() {
 									rules={buildFieldRules.pin}
 									placeholder="Personal identification number (EGN)"
 									icon={['fas', 'id-card']}
+									inputMode="numeric"
 									register={register}
 									formState={formState}
 									getFieldState={getFieldState}
