@@ -23,7 +23,7 @@ export default function FormRadio({
 	return (
 		<div className="form-group mb-3">
 			<label className="form-label" style={{ paddingLeft: 5 }}>
-				{label ?? name}
+				{label}
 			</label>
 			<br />
 

@@ -194,6 +194,7 @@ export default function SignUp() {
 								<FormRadio
 									name="gender"
 									rules={buildFieldRules.gender}
+									label="Gender"
 									options={['Male', 'Female', 'Other']}
 									register={register}
 									formState={formState}
