@@ -1,11 +1,63 @@
 // import { validationRules } from "../../../helpers/validationRules.js";
 import FormFieldset from "../../form-elements/fieldset/FormFieldset.jsx";
 import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
+import { useForm } from "react-hook-form";
+import FormInput from "../../form-elements/form-input/FormInput.jsx";
 
+const intialValues = {
+	fullName: '',
+	email: '',
+	password: '',
+	confirmPassword: '',
+	pin: '',
+	phoneCode: '+359',
+	phone: '',
+	address: '',
+	dob: ''
+}
 export default function SignUp() {
+	const {
+		register,
+		handleSubmit,
+		formState,
+		reset,
+		getFieldState,
+		watch,
+	} = useForm({
+		defaultValues: intialValues,
+		mode: 'onTouched',
+		reValidateMode: 'onChange',
+		criteriaMode: 'all'
+	});
+
+	const { errors, isSubmitted } = formState;
+
 	const registerHandler = () => {
 		console.log('in')
+		reset();
 	}
+
+	const onInvalid = (errors) => {
+		console.log(errors);
+	}
+
+	const fieldErrors = (field) => {
+		const { isTouched } = getFieldState(field, formState);
+		if (!isTouched && !isSubmitted) {
+			return [];
+		}
+
+		const types = errors[field]?.types || {};
+		return Object.entries(types).map(([key, message]) => ({
+			$uid: `${field}-${key}`,
+			$message: message,
+		}));
+	};
+
+	const isInvalid = (field) => {
+		const { isTouched } = getFieldState(field, formState);
+		return (isTouched || isSubmitted) && errors[field];
+	};
 
 	return (
 		<div className="container">
@@ -15,17 +67,27 @@ export default function SignUp() {
 						Sign up user
 					</h3>
 
-					<form action={registerHandler}>
+					<form onSubmit={handleSubmit(registerHandler, onInvalid)}>
 						<div className="row">
 							<div className="col-md-12">
 								<FormFieldset
 									icon={['fas', 'user']}
-									name="fullName"
+									id="fullName"
+									errors={fieldErrors('fullName')}
 								>
-									<input type="text"
-										   name="formData.fullName"
-										   placeholder="Full Name"
-										   className="form-control"
+									<FormInput
+										name="fullName"
+										placeholder="Full Name"
+										rules={{
+											required: 'Full name is required',
+											pattern: {
+												value: /^[A-Z][a-z]+ [A-Z][a-z]+$/,
+												message: "Field must contain two names (letters only) separated by a space. Both should start with a capital letter",
+											}
+										}}
+										register={register}
+										formState={formState}
+										getFieldState={getFieldState}
 									/>
 								</FormFieldset>
 							</div>
@@ -33,12 +95,24 @@ export default function SignUp() {
 							<div className="col-md-12">
 								<FormFieldset
 									icon={['fas', 'envelope']}
-									name="email"
+									id="email"
+									errors={fieldErrors('email')}
 								>
 
 									<input type="email"
-										   name="formData.email"
-										   className="form-control"
+										   {...register('email', {
+											   required: 'Email is required',
+											   minLength: { value: 6, message: 'Email must be at least 8 characters long' },
+											   pattern: {
+												   value: /\S+@\S+\.\S+/,
+												   message: "Entered value does not match email format",
+											   },
+										   })}
+										   id="email"
+										   className={[
+											   'form-control',
+											   isInvalid('email') ? 'is-invalid' : null,
+										   ].filter(Boolean).join(' ')}
 										   placeholder="Email"
 									/>
 								</FormFieldset>
@@ -47,11 +121,25 @@ export default function SignUp() {
 							<div className="col-md-6">
 								<FormFieldset
 									icon={['fas', 'unlock']}
-									name="password"
+									id="password"
+									errors={fieldErrors('password')}
 								>
 									<input type="password"
-										   name="password"
-										   className="form-control"
+										   {...register('password', {
+											   required: 'Password is required',
+											   minLength: { value: 3, message: 'Password must be at least 3 characters long' },
+											   maxLength: { value: 10, message: 'Password must be at most 10 characters long' },
+											   pattern: {
+												   value: /[A-Za-z0-9]/,
+												   message: 'Only letters and numbers are allowed. No special characters allowed',
+											   },
+
+										   })}
+										   id="password"
+										  className={[
+											   'form-control',
+											   isInvalid('password') ? 'is-invalid' : null,
+										   ].filter(Boolean).join(' ')}
 										   placeholder="Password..."
 									/>
 								</FormFieldset>
@@ -60,11 +148,23 @@ export default function SignUp() {
 							<div className="col-md-6">
 								<FormFieldset
 									icon={['fas', 'unlock-keyhole']}
-									name="confirmPassword"
+									id="confirmPassword"
+									errors={fieldErrors('confirmPassword')}
 								>
 									<input type="password"
-										   name="confirmPassword"
-										   className="form-control"
+										   {...register('confirmPassword', {
+											   required: true,
+											   validate: (val =>  {
+												   if (watch('password') !== val) {
+													   return 'Passwords do not match';
+												   }
+											   })
+										   })}
+										   id="confirmPassword"
+										  className={[
+											   'form-control',
+											   isInvalid('confirmPassword') ? 'is-invalid' : null,
+										   ].filter(Boolean).join(' ')}
 										   placeholder="Confirm password..."
 									/>
 								</FormFieldset>
@@ -73,10 +173,18 @@ export default function SignUp() {
 							<div className="col-md-12">
 								<FormFieldset
 									icon={['fas', 'id-card']}
-									name="pin"
+									id="pin"
+									errors={fieldErrors('pin')}
 								>
 									<input type="text"
-										   name="formData.pin"
+										   {...register('pin', {
+											   required: 'Personal identification number (EGN) is required',
+											   pattern: {
+												   value: /^\d{10}$/,
+												   message: 'Invalid egn',
+											   },
+										   })}
+										   id="pin"
 										   className="form-control"
 										   placeholder="Personal identification number (EGN)"
 									/>
@@ -86,9 +194,14 @@ export default function SignUp() {
 							<div className="col-md-12">
 								<FormFieldset
 									icon={['fas', 'phone-volume']}
-									name="phone"
+									id="phone"
+									errors={fieldErrors('phone')}
 								>
-									<select className="form-select" style={{ maxWidth: 120 }}>
+									<select
+										{...register('phoneCode')}
+										className="form-select"
+										style={{ maxWidth: 120 }}
+									>
 										<option value="+359">+359</option>
 										<option value="+971">+971</option>
 										<option value="+972">+972</option>
@@ -97,9 +210,19 @@ export default function SignUp() {
 									</select>
 
 									<input type="text"
-										   name="formData.phone"
+										   {...register('phone', {
+											   required: 'Phone number is required',
+											   pattern: {
+												   value: /^\d{9}$/,
+												   message: 'Invalid phone number',
+											   },
+										   })}
+										   id="phone"
 										   placeholder="Phone number"
-										   className="form-control"
+										   className={[
+											   'form-control',
+											   isInvalid('phone') ? 'is-invalid' : null,
+										   ].filter(Boolean).join(' ')}
 									/>
 								</FormFieldset>
 							</div>
@@ -111,11 +234,18 @@ export default function SignUp() {
 									<div className="col-md-12">
 										<FormFieldset
 											icon={['fas', 'location-pin']}
-											name="address"
+											id="address"
+											errors={fieldErrors('address')}
 										>
 											<input type="text"
-												   name="address"
-												   className="form-control"
+												   {...register('address', {
+													   required: 'Address is required',
+												   })}
+												   id="address"
+												   className={[
+													   'form-control',
+													   isInvalid('address') ? 'is-invalid' : null,
+												   ].filter(Boolean).join(' ')}
 												   placeholder="Address"
 											/>
 										</FormFieldset>
@@ -125,11 +255,18 @@ export default function SignUp() {
 										<FormFieldset
 											disabled={true}
 											icon={['fas', 'calendar']}
-											name="dob"
+											id="dob"
+											errors={fieldErrors('dob')}
 										>
 											<input type="text"
-												   name="formData.dob"
-												   className="form-control"
+												   {...register('dob', {
+													   required: 'Date of Birth is required',
+												   })}
+												   id="dob"
+												   className={[
+													   'form-control',
+													   isInvalid('dob') ? 'is-invalid' : null,
+												   ].filter(Boolean).join(' ')}
 												   placeholder="Date of Birth"
 											/>
 										</FormFieldset>
@@ -141,6 +278,9 @@ export default function SignUp() {
 								<FormRadio
 									name="Gender"
 									options={['Male', 'Female', 'Other']}
+									register={register}
+									formState={formState}
+									getFieldState={getFieldState}
 								/>
 							</div>
 						</div>

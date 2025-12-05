@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function FormFieldset({
 	label,
-	name,
+	id,
 	errors = [],
 	icon = [],
 	disabled,
@@ -11,7 +11,7 @@ export default function FormFieldset({
 	return (
 		<fieldset disabled={disabled} className="form-group mb-3">
 			{label && (
-				<label htmlFor={name} className="control-label">
+				<label htmlFor={id} className="control-label">
 					{label}
 				</label>
 			)}
@@ -19,7 +19,7 @@ export default function FormFieldset({
 			<div className="input-group">
 				{icon.length > 0 && (
 					<span className="input-group-text">
-					<FontAwesomeIcon icon={icon}/>
+						<FontAwesomeIcon icon={icon}/>
 					</span>
 				)}
 

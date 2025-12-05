@@ -1,7 +1,47 @@
 import FormFieldset from "../../form-elements/fieldset/FormFieldset.jsx";
 import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import FormInput from "../../form-elements/form-input/FormInput.jsx";
+
+const intialValues = { email: '', password: '' }
 
 export default function Login() {
+	const {
+		register,
+		handleSubmit,
+		formState,
+		reset,
+		getFieldState
+	} = useForm({
+		defaultValues: intialValues,
+		mode: 'onTouched',
+		reValidateMode: 'onChange',
+		criteriaMode: 'all'
+	});
+	const { errors, isSubmitted } = formState;
+
+	const loginHandler = (data) => {
+		console.log(data);
+		reset();
+	}
+
+	const onInvalid = (errors) => {
+		console.log(errors);
+	}
+
+	const fieldErrors = (field) => {
+		const { isTouched } = getFieldState(field, formState);
+		if (!isTouched && !isSubmitted) {
+			return [];
+		}
+
+		const types = errors[field]?.types || {};
+		return Object.entries(types).map(([key, message]) => ({
+			$uid: `${field}-${key}`,
+			$message: message,
+		}));
+	};
+
 	return (
 		<div className="container">
 			<div className="container vh-100 d-flex justify-content-center align-items-center">
@@ -10,24 +50,49 @@ export default function Login() {
 				>
 					<h3 className="text-center mb-4">Login</h3>
 
-					<form action={loginHandler}>
+					<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
 						<FormFieldset icon={['fas', 'user']}
 									  label="Email"
-									  name="email"
+									  id="email"
+									  errors={fieldErrors('email')}
 						>
-							<input type="email"
-								   className="form-control"
-								   placeholder="Place enter email..."
+							<FormInput
+								name="email"
+								placeholder="Place enter email..."
+								rules={{
+									required: 'Email is required',
+									minLength: { value: 6, message: 'Email must be at least 8 characters long' },
+									pattern: {
+										value: /\S+@\S+\.\S+/,
+										message: "Entered value does not match email format",
+									}
+								}}
+								register={register}
+								formState={formState}
+								getFieldState={getFieldState}
 							/>
+
 						</FormFieldset>
 
 						<FormFieldset icon={['fas', 'lock']}
 									  label="Password"
-									  name="password"
+									  id="password"
+									  errors={fieldErrors('password')}
 						>
-							<input type="password"
-								   className="form-control"
-								   placeholder="Place enter password..."
+							<FormInput
+								type="password"
+								name="password"
+								placeholder="Place enter password..."
+								rules={{
+									required: 'Password is required',
+									minLength: {
+										value: 3,
+										message: 'Password must be at least 3 characters long'
+									}
+								}}
+								register={register}
+								formState={formState}
+								getFieldState={getFieldState}
 							/>
 						</FormFieldset>
 
