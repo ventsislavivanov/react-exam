@@ -13,6 +13,7 @@ export default function Dashboard() {
 	const [kidsMovies, setKidsMovies] = useState([]);
 	const [inTheaterMovies, setInTheaterMovies] = useState([]);
 
+
 	useEffect(() => {
 		async function fetchMovies() {
 			setBestDramaMovies(await getBestDramaMovies())

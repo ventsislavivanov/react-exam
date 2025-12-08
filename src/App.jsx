@@ -9,6 +9,7 @@ import ContactUs from "./components/contact-us/ContactUs.jsx";
 import Login from "./components/auth/login/Login.jsx";
 import SignUp from "./components/auth/sign-up/SignUp.jsx";
 import MovieDetails from "./components/movie-details/MovieDetails.jsx";
+import Approved from "./components/auth/approved/Approved.jsx";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
 				<Route path="/contact-us" element={<ContactUs/>}/>
 				<Route path="/login" element={<Login/>}/>
 				<Route path="/sign-up" element={<SignUp/>}/>
+				<Route path="/approved" element={<Approved/>}/>
 			</Routes>
 
 			<Footer />

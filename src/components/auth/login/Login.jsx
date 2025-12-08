@@ -1,10 +1,16 @@
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
+import { generationRequestToken, buildAuthUrl } from "../../../services/authServices.js";
 
-const intialValues = { email: '', password: '' }
+const intialValues = {
+	username: 'vivanovspam',
+	password: 'eUXz5@Zn#0'
+};
 
 export default function Login() {
+	const [searchParams] = useSearchParams();
+
 	const {
 		register,
 		handleSubmit,
@@ -18,23 +24,28 @@ export default function Login() {
 		criteriaMode: 'all'
 	});
 
-	const loginHandler = (data) => {
-		console.log(data);
-		reset();
-	}
+	const loginHandler = async () => {
+		try {
+			const { request_token } = await generationRequestToken();
+			const returnUrl = searchParams.get("returnUrl") || undefined;
+
+			const authUrl = await buildAuthUrl(request_token, returnUrl);
+			window.location.href = authUrl;
+		} catch (err) {
+			console.error(err);
+		} finally {
+			reset();
+		}
+	};
 
 	const onInvalid = (errors) => {
 		console.log(errors);
-	}
+	};
 
 	const buildFieldRules = {
-		email: {
-			required: 'Email is required',
-			minLength: { value: 6, message: 'Email must be at least 8 characters long' },
-			pattern: {
-				value: /\S+@\S+\.\S+/,
-				message: "Entered value does not match email format",
-			}
+		username: {
+			required: 'Username is required',
+			minLength: { value: 6, message: 'Username must be at least 8 characters long' }
 		},
 		password: {
 			required: 'Password is required',
@@ -52,10 +63,10 @@ export default function Login() {
 
 					<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
 						<FormInput
-							name="email"
-							rules={buildFieldRules.email}
-							placeholder="Place enter email..."
-							label="Email"
+							name="username"
+							rules={buildFieldRules.username}
+							placeholder="Place enter username..."
+							label="Username"
 							icon={['fas', 'user']}
 							register={register}
 							formState={formState}
@@ -74,14 +85,11 @@ export default function Login() {
 							getFieldState={getFieldState}
 						/>
 
-						<button type="submit"
-								className="btn btn-primary w-100"
-						>Login</button>
+						<button type="submit" className="btn btn-primary w-100">Login</button>
 					</form>
 
 					<p className="text-center mt-3">
-						Don't have an account?
-						<Link to="/sign-up">Sign up</Link>
+						Don't have an account? <Link to="/sign-up">Sign up</Link>
 					</p>
 				</div>
 			</div>
