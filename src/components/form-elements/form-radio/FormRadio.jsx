@@ -1,15 +1,14 @@
 import { useId } from 'react';
+import { useFormContext } from "react-hook-form";
 
 export default function FormRadio({
 	name,
 	options,
-	register,
-	formState,
-	getFieldState,
 	rules = {},
 	label,
 }) {
 	const groupId = useId();
+	const { register, formState, getFieldState } = useFormContext();
 	const { errors, isSubmitted } = formState;
 	const { isTouched } = getFieldState(name, formState);
 

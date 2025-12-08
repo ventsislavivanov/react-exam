@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
 import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
 import { validationRules as vr} from "../../../helpers/validationRules.js";
@@ -13,19 +13,18 @@ const intialValues = {
 	dob: ''
 }
 export default function SignUp() {
-	const {
-		register,
-		handleSubmit,
-		formState,
-		reset,
-		getFieldState,
-		watch,
-	} = useForm({
+	const methods = useForm({
 		defaultValues: intialValues,
 		mode: 'onTouched',
 		reValidateMode: 'onChange',
 		criteriaMode: 'all'
 	});
+
+	const {
+		handleSubmit,
+		reset,
+		watch
+	} = methods;
 
 	const registerHandler = () => {
 		console.log('in')
@@ -91,118 +90,96 @@ export default function SignUp() {
 						Sign up user
 					</h3>
 
-					<form onSubmit={handleSubmit(registerHandler, onInvalid)}>
-						<div className="row">
-							<div className="col-md-12">
-								<FormInput
-									name="fullName"
-									rules={buildFieldRules.fullName}
-									placeholder="Full Name"
-									icon={['fas', 'user']}
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
+					<FormProvider {...methods}>
+						<form onSubmit={handleSubmit(registerHandler, onInvalid)}>
+							<div className="row">
+								<div className="col-md-12">
+									<FormInput
+										name="fullName"
+										rules={buildFieldRules.fullName}
+										placeholder="Full Name"
+										icon={['fas', 'user']}
+									/>
+								</div>
 
-							<div className="col-md-12">
-								<FormInput
-									name="email"
-									rules={buildFieldRules.email}
-									placeholder="Email"
-									icon={['fas', 'envelope']}
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
+								<div className="col-md-12">
+									<FormInput
+										name="email"
+										rules={buildFieldRules.email}
+										placeholder="Email"
+										icon={['fas', 'envelope']}
+									/>
+								</div>
 
-							<div className="col-md-6">
-								<FormInput
-									type="password"
-									name="password"
-									rules={buildFieldRules.password}
-									placeholder="Password..."
-									icon={['fas', 'unlock']}
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
+								<div className="col-md-6">
+									<FormInput
+										type="password"
+										name="password"
+										rules={buildFieldRules.password}
+										placeholder="Password..."
+										icon={['fas', 'unlock']}
+									/>
+								</div>
 
-							<div className="col-md-6">
-								<FormInput
-									type="password"
-									name="confirmPassword"
-									rules={buildFieldRules.confirmPassword}
-									placeholder="Confirm password..."
-									icon={['fas', 'unlock-keyhole']}
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
+								<div className="col-md-6">
+									<FormInput
+										type="password"
+										name="confirmPassword"
+										rules={buildFieldRules.confirmPassword}
+										placeholder="Confirm password..."
+										icon={['fas', 'unlock-keyhole']}
+									/>
+								</div>
 
-							<div className="col-md-12">
-								<FormInput
-									name="pin"
-									rules={buildFieldRules.pin}
-									placeholder="Personal identification number (EGN)"
-									icon={['fas', 'id-card']}
-									inputMode="numeric"
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
-						</div>
-
-						<div className="row">
-							<div className="col-md-8">
-								<div className="row">
-									<div className="col-md-12">
-										<FormInput
-											name="address"
-											rules={buildFieldRules.address}
-											placeholder="Address"
-											icon={['fas', 'location-pin']}
-											register={register}
-											formState={formState}
-											getFieldState={getFieldState}
-										/>
-									</div>
-
-									<div className="col-md-12">
-										<FormInput
-											name="dob"
-											rules={buildFieldRules.dob}
-											placeholder="Date of Birth"
-											icon={['fas', 'calendar']}
-											register={register}
-											formState={formState}
-											getFieldState={getFieldState}
-										/>
-									</div>
+								<div className="col-md-12">
+									<FormInput
+										name="pin"
+										rules={buildFieldRules.pin}
+										placeholder="Personal identification number (EGN)"
+										icon={['fas', 'id-card']}
+										inputMode="numeric"
+									/>
 								</div>
 							</div>
 
-							<div className="col-md-4">
-								<FormRadio
-									name="gender"
-									rules={buildFieldRules.gender}
-									label="Gender"
-									options={['Male', 'Female', 'Other']}
-									register={register}
-									formState={formState}
-									getFieldState={getFieldState}
-								/>
-							</div>
-						</div>
+							<div className="row">
+								<div className="col-md-8">
+									<div className="row">
+										<div className="col-md-12">
+											<FormInput
+												name="address"
+												rules={buildFieldRules.address}
+												placeholder="Address"
+												icon={['fas', 'location-pin']}
+											/>
+										</div>
 
-						<button type="submit" className="btn btn-primary w-100">
-							Register
-						</button>
-					</form>
+										<div className="col-md-12">
+											<FormInput
+												name="dob"
+												rules={buildFieldRules.dob}
+												placeholder="Date of Birth"
+												icon={['fas', 'calendar']}
+											/>
+										</div>
+									</div>
+								</div>
+
+								<div className="col-md-4">
+									<FormRadio
+										name="gender"
+										rules={buildFieldRules.gender}
+										label="Gender"
+										options={['Male', 'Female', 'Other']}
+									/>
+								</div>
+							</div>
+
+							<button type="submit" className="btn btn-primary w-100">
+								Register
+							</button>
+						</form>
+					</FormProvider>
 				</div>
 			</div>
 		</div>

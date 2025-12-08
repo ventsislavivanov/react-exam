@@ -1,17 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useFormContext } from "react-hook-form";
 
 export default function FormInput({
 	type = 'text',
 	name,
 	placeholder,
 	rules,
-	register,
-	formState,
-	getFieldState,
 	label,
 	icon = [],
 	disabled,
 }) {
+	const { register, formState, getFieldState } = useFormContext();
 	const { errors, isSubmitted } = formState;
 
 	const isInvalid = (field) => {

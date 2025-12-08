@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
 import { generationRequestToken, buildAuthUrl } from "../../../services/authServices.js";
 
@@ -11,18 +11,17 @@ const intialValues = {
 export default function Login() {
 	const [searchParams] = useSearchParams();
 
-	const {
-		register,
-		handleSubmit,
-		formState,
-		reset,
-		getFieldState
-	} = useForm({
+	const methods = useForm({
 		defaultValues: intialValues,
 		mode: 'onTouched',
 		reValidateMode: 'onChange',
 		criteriaMode: 'all'
 	});
+
+	const {
+		handleSubmit,
+		reset
+	} = methods;
 
 	const loginHandler = async () => {
 		try {
@@ -61,32 +60,28 @@ export default function Login() {
 				>
 					<h3 className="text-center mb-4">Login</h3>
 
-					<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
-						<FormInput
-							name="username"
-							rules={buildFieldRules.username}
-							placeholder="Place enter username..."
-							label="Username"
-							icon={['fas', 'user']}
-							register={register}
-							formState={formState}
-							getFieldState={getFieldState}
-						/>
+					<FormProvider {...methods}>
+						<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
+							<FormInput
+								name="username"
+								rules={buildFieldRules.username}
+								placeholder="Place enter username..."
+								label="Username"
+								icon={['fas', 'user']}
+							/>
 
-						<FormInput
-							type="password"
-							name="password"
-							rules={buildFieldRules.password}
-							placeholder="Place enter password..."
-							label="Password"
-							icon={['fas', 'lock']}
-							register={register}
-							formState={formState}
-							getFieldState={getFieldState}
-						/>
+							<FormInput
+								type="password"
+								name="password"
+								rules={buildFieldRules.password}
+								placeholder="Place enter password..."
+								label="Password"
+								icon={['fas', 'lock']}
+							/>
 
-						<button type="submit" className="btn btn-primary w-100">Login</button>
-					</form>
+							<button type="submit" className="btn btn-primary w-100">Login</button>
+						</form>
+					</FormProvider>
 
 					<p className="text-center mt-3">
 						Don't have an account? <Link to="/sign-up">Sign up</Link>
