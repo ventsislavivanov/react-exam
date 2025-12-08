@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
+import styles from './MovieCard.module.css';
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';
@@ -20,13 +21,13 @@ export default function MovieCard({
 
 	return (
 		<div className="card mb-3 h-100 d-flex flex-column">
-			<div className="image-container">
+			<div className={`${styles.imageContainer} border-bottom`}>
 				<img
-				src={posterPath}
-				alt="movie.title"
-				className="card-img-top user-select-none"
-				width="100%"
-				height="200"
+					src={posterPath}
+					alt="movie.title"
+					className={`${styles.cardImgTop} user-select-none`}
+					width="100%"
+					height="200"
 				/>
 			</div>
 
