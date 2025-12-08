@@ -9,6 +9,8 @@ export default function FormInput({
 	label,
 	icon = [],
 	disabled,
+	classes = 'form-control',
+	showErrors = true,
 }) {
 	const { register, formState, getFieldState } = useFormContext();
 	const { errors, isSubmitted } = formState;
@@ -19,8 +21,6 @@ export default function FormInput({
 	};
 
 	const cx = (...classes) => classes.filter(Boolean).join(' ');
-
-	const invalidIf = (field) => isInvalid(field) && 'is-invalid';
 
 	const fieldErrors = (field) => {
 		const { isTouched } = getFieldState(field, formState);
@@ -33,6 +33,8 @@ export default function FormInput({
 			$message: message,
 		}));
 	};
+
+	const showInvalid = showErrors && isInvalid(name);
 
 	return (
 		<div className="form-group mb-3">
@@ -52,12 +54,12 @@ export default function FormInput({
 					id={name}
 					placeholder={placeholder}
 					{...register(name, rules)}
-					className={cx('form-control', invalidIf(name))}
+					className={cx(classes, showInvalid ? 'is-invalid' : null)}
 					disabled={disabled}
 				/>
 			</div>
 
-			{fieldErrors(name).map((e) => (
+			{showErrors && fieldErrors(name).map((e) => (
 				<div key={e.$uid} className="invalid-feedback d-block">{e.$message}</div>
 			))}
 		</div>

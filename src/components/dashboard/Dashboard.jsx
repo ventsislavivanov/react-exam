@@ -6,6 +6,7 @@ import {
 	getKidsMovies,
 	getPopularMovies,
 } from "../../services/movieServices.js";
+import Jumbotron from "../jumbotron/Jumbotron.jsx";
 
 export default function Dashboard() {
 	const [bestDramaMovies, setBestDramaMovies] = useState([]);
@@ -28,6 +29,12 @@ export default function Dashboard() {
 
 	return (
 		<>
+			<Jumbotron
+				title="Find the Perfect Movie for Any Mood!"
+				description="Explore a world of movies at your fingertips. Search for your favorite titles or discover new ones to fall in love with. Start your journey today!"
+				callToAction="Looking for the perfect movie? Our platform makes it easy to search, discover, and save your favorite films. Join now and dive into the world of cinema."
+			/>
+
 			<div className="container">
 				<h2 className="pt-2">Popular movies</h2>
 
