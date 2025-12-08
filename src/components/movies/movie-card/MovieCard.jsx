@@ -24,7 +24,7 @@ export default function MovieCard({
 			<div className={`${styles.imageContainer} border-bottom`}>
 				<img
 					src={posterPath}
-					alt="movie.title"
+					alt={movie.title}
 					className={`${styles.cardImgTop} user-select-none`}
 					width="100%"
 					height="200"

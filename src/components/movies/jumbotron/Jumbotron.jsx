@@ -1,14 +1,17 @@
-import FormInput from "../form-elements/form-input/FormInput.jsx";
+import FormInput from "../../form-elements/form-input/FormInput.jsx";
 import { FormProvider, useForm } from "react-hook-form";
 import styles from './Jumbotron.module.css';
+import { useNavigate } from "react-router";
 
-const intialValues = { search: ''};
+const intialValues = { searchQuery: ''};
 
 export default function Jumbotron({
 	title,
 	description,
 	callToAction
 }) {
+	const navigate = useNavigate();
+
 	const methods = useForm({
 		defaultValues: intialValues,
 		mode: 'onChange',
@@ -25,7 +28,8 @@ export default function Jumbotron({
 
 	const searchHandler = () => {
 		try {
-
+			const encoded = encodeURIComponent(methods.getValues().searchQuery || '');
+			navigate(`/movies/${encoded}/searched`);
 		}
 		catch (err) {
 			console.error(err);
@@ -39,7 +43,7 @@ export default function Jumbotron({
 	};
 
 	const buildFieldRules = {
-		search: {
+		searchQuery: {
 			required: true,
 			minLength: { value: 3, message: 'Search must be at least 3 characters long' }
 		},
@@ -65,9 +69,10 @@ export default function Jumbotron({
 								<div className="col-sm-10">
 									<FormInput
 										type="search"
-										name="search"
-										rules={buildFieldRules.search}
+										name="searchQuery"
+										rules={buildFieldRules.searchQuery}
 										placeholder="Search..."
+										icon={['fas', 'search']}
 										showErrors={false}
 									/>
 								</div>

@@ -5,7 +5,7 @@ import {
 	getInTheaterMovies,
 	getKidsMovies,
 	getPopularMovies,
-} from "../../services/movieServices.js";
+} from "../../../services/movieServices.js";
 import Jumbotron from "../jumbotron/Jumbotron.jsx";
 
 export default function Dashboard() {
