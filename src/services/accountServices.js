@@ -5,12 +5,13 @@ const accountId = 21732660;
 
 export async function toggleFavoriteMovie(movieId, sessionId, favorite) {
 	try {
-    const response = await axiosTheMovieDb.post(`account/${accountId}/favorit?${apiKey}&session_id=${sessionId}`, {
-		media_type: 'movie',
-		media_id: movieId,
-		favorite
-    });
-    	return response.data.results;
+		const response = await axiosTheMovieDb.post(`account/${accountId}/favorite?${apiKey}&session_id=${sessionId}`, {
+			media_type: 'movie',
+			media_id: movieId,
+			favorite
+		});
+
+		return response.data.results;
 	}
 	catch (e) {
     	console.error('Oops unexpected', e);

@@ -6,9 +6,7 @@ import { toggleFavoriteMovie } from "../../../services/accountServices.js";
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';
-export default function MovieCard({
-	movie
-}) {
+export default function MovieCard({movie}) {
 	const navigate = useNavigate();
 
 	const posterPath = BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path;
