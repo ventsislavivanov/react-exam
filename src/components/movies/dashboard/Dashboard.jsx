@@ -7,13 +7,19 @@ import {
 	getPopularMovies,
 } from "../../../services/movieServices.js";
 import Jumbotron from "../jumbotron/Jumbotron.jsx";
+import { loadFavoriteMovie } from "../../../services/accountServices.js";
+import { useSelector } from "react-redux";
 
 export default function Dashboard() {
+	const isLogin = useSelector((state) => state.auth.success);
+	const sessionId = useSelector((state) => state.auth.sessionId);
+
+	const [favoritesMovies, setFavoritesMovies] = useState([]);
+
 	const [bestDramaMovies, setBestDramaMovies] = useState([]);
 	const [popularMovies, setPopularMoviesMovies] = useState([]);
 	const [kidsMovies, setKidsMovies] = useState([]);
 	const [inTheaterMovies, setInTheaterMovies] = useState([]);
-
 
 	useEffect(() => {
 		async function fetchMovies() {
@@ -21,10 +27,14 @@ export default function Dashboard() {
 			setPopularMoviesMovies(await getPopularMovies());
 			setKidsMovies(await getKidsMovies());
 			setInTheaterMovies(await getInTheaterMovies());
+
+			if (isLogin) {
+				setFavoritesMovies(await loadFavoriteMovie(sessionId));
+			}
 		}
 
 		fetchMovies();
-	}, []);
+	}, [isLogin, sessionId]);
 
 
 	return (
@@ -41,7 +51,10 @@ export default function Dashboard() {
 				<div className="row">
 					{popularMovies.map((movie) => (
 						<div className="col-lg-2 pb-2" key={movie.id}>
-							<MovieCard movie={movie}/>
+							<MovieCard
+								movie={movie}
+								isFavorite={favoritesMovies.some(f => f.id === movie.id)}
+							/>
 						</div>
 					))}
 				</div>
@@ -51,7 +64,15 @@ export default function Dashboard() {
 				<div className="row">
 					{inTheaterMovies.map(movie => (
 						<div className="col-lg-2 pb-2" key={movie.id}>
-							<MovieCard movie={movie}/>
+							<MovieCard
+								movie={movie}
+								isFavorite={favoritesMovies.some(f => f.id === movie.id)}
+								onToggleFavorite={async () => {
+									if (!isLogin) return;
+									const updated = await loadFavoriteMovie(sessionId);
+									setFavoritesMovies(updated || []);
+								}}
+							/>
 						</div>
 					))}
 				</div>
@@ -61,7 +82,10 @@ export default function Dashboard() {
 				<div className="row">
 					{kidsMovies.map(movie => (
 						<div className="col-lg-2 pb-2" key={movie.id}>
-							<MovieCard movie={movie}/>
+							<MovieCard
+								movie={movie}
+								isFavorite={favoritesMovies.some(f => f.id === movie.id)}
+							/>
 						</div>
 					))}
 				</div>
@@ -71,7 +95,10 @@ export default function Dashboard() {
 				<div className="row">
 					{bestDramaMovies.map(movie => (
 						<div className="col-lg-2 pb-2" key={movie.id}>
-							<MovieCard movie={movie}/>
+							<MovieCard
+								movie={movie}
+								isFavorite={favoritesMovies.some(f => f.id === movie.id)}
+							/>
 						</div>
 					))}
 				</div>
