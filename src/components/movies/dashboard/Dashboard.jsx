@@ -7,14 +7,15 @@ import {
 	getPopularMovies,
 } from "../../../services/movieServices.js";
 import Jumbotron from "../jumbotron/Jumbotron.jsx";
-import { loadFavoriteMovie } from "../../../services/accountServices.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loadFavorites, selectFavorites } from "../../../store/favoritesSlice";
 
 export default function Dashboard() {
-	const isLogin = useSelector((state) => state.auth.success);
-	const sessionId = useSelector((state) => state.auth.sessionId);
+    const isLogin = useSelector((state) => state.auth.success);
+    const sessionId = useSelector((state) => state.auth.sessionId);
+    const dispatch = useDispatch();
 
-	const [favoritesMovies, setFavoritesMovies] = useState([]);
+ 	const favoritesMovies = useSelector(selectFavorites);
 
 	const [bestDramaMovies, setBestDramaMovies] = useState([]);
 	const [popularMovies, setPopularMoviesMovies] = useState([]);
@@ -27,14 +28,17 @@ export default function Dashboard() {
 			setPopularMoviesMovies(await getPopularMovies());
 			setKidsMovies(await getKidsMovies());
 			setInTheaterMovies(await getInTheaterMovies());
-
-			if (isLogin) {
-				setFavoritesMovies(await loadFavoriteMovie(sessionId));
-			}
 		}
 
 		fetchMovies();
 	}, [isLogin, sessionId]);
+
+    // load favorites when session becomes available
+    useEffect(() => {
+        if (isLogin && sessionId) {
+            dispatch(loadFavorites());
+        }
+    }, [dispatch, isLogin, sessionId]);
 
 
 	return (
@@ -64,15 +68,10 @@ export default function Dashboard() {
 				<div className="row">
 					{inTheaterMovies.map(movie => (
 						<div className="col-lg-2 pb-2" key={movie.id}>
-							<MovieCard
-								movie={movie}
-								isFavorite={favoritesMovies.some(f => f.id === movie.id)}
-								onToggleFavorite={async () => {
-									if (!isLogin) return;
-									const updated = await loadFavoriteMovie(sessionId);
-									setFavoritesMovies(updated || []);
-								}}
-							/>
+       						<MovieCard
+                                movie={movie}
+                                isFavorite={favoritesMovies.some(f => f.id === movie.id)}
+                            />
 						</div>
 					))}
 				</div>

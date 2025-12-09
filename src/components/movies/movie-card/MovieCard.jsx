@@ -1,32 +1,26 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import styles from './MovieCard.module.css';
-import { useSelector } from "react-redux";
-import { toggleFavoriteMovie } from "../../../services/accountServices.js";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../../../store/favoritesSlice";
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';
 
 export default function MovieCard(
-	{movie, isFavorite = false}
+    {movie, isFavorite = false}
 ) {
-	const navigate = useNavigate();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
 	const posterPath = BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path;
 
-	const isLogin = useSelector((state) => state.auth.success);
-	const sessionId = useSelector((state) => state.auth.sessionId);
+ const isLogin = useSelector((state) => state.auth.success);
 
-	const addFavoriteHandler= () => {
-		(async () => {
-			try {
-				const result = await toggleFavoriteMovie(movie.id, sessionId,  );
-			}
-			catch (e) {
-				console.error(e);
-			}
-		})();
-	};
+ const addFavoriteHandler= () => {
+        if (!isLogin) return;
+        dispatch(toggleFavorite({ movie, favorite: !isFavorite }));
+    };
 
 
 	return (
