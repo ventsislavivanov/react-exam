@@ -48,7 +48,10 @@ export default function Header() {
 					<ul className="navbar-nav">
 						{!isLogin && (
 							<li className="nav-item">
-								<Link to="/login" className="btn btn-outline-light btn-lg" role="button">
+								<Link to="/login"
+									  className="btn btn-outline-light btn-lg"
+									  role="button"
+								>
 									Log In
 								</Link>
 							</li>
@@ -56,7 +59,10 @@ export default function Header() {
 
 						{isLogin && (
 							<li className="nav-item">
-								<button type="button" className="btn btn-outline-light btn-lg" onClick={() => dispatch(logout())}>
+								<button type="button"
+										className="btn btn-outline-light btn-lg"
+										onClick={() => dispatch(logout())}
+								>
 									Log out
 								</button>
 							</li>

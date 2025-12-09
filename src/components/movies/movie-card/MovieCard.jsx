@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import styles from './MovieCard.module.css';
+import { useSelector } from "react-redux";
+import { toggleFavoriteMovie } from "../../../services/accountServices.js";
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';
@@ -11,13 +13,21 @@ export default function MovieCard({
 
 	const posterPath = BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path;
 
+	const isLogin = useSelector((state) => state.auth.success);
+	const sessionId = useSelector((state) => state.auth.sessionId);
 
-	//    isFavorite() {
-	//       return this.favoritesStore.isFavorite(this.movie.id);
-	//     },
-	//     loginStatus() {
-	//       return this.authsStore.success;
-	//     },
+	const isFavorite = true;
+	const addFavoriteHandler= () => {
+		(async () => {
+			try {
+				const result = await toggleFavoriteMovie(movie.id, sessionId,  );
+			}
+			catch (e) {
+				console.error(e);
+			}
+		})();
+	};
+
 
 	return (
 		<div className="card mb-3 h-100 d-flex flex-column">
@@ -50,15 +60,15 @@ export default function MovieCard({
 					<FontAwesomeIcon icon={['fas', 'eye']}/>
 				</button>
 
-				{/*{loginStatus && (
+				{isLogin && (
 					<button
 						type="button"
 						className={`btn ${!isFavorite ? 'btn-outline-primary' : 'btn-primary'}`}
-						onClick="addFavorite"
+						onClick={addFavoriteHandler}
 					>
-						<font-awesome-icon icon="['fas', 'heart']" />
+						<FontAwesomeIcon icon={['fas', 'heart']} />
 					</button>
-				)}*/}
+				)}
 			</div>
 		</div>
 	);
