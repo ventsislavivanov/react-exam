@@ -1,5 +1,7 @@
 import { Link } from "react-router";
 import styles from './Header.module.css';
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/authSlice.js";
 
 const links = [
 	{ name: '', label: 'Movie' },
@@ -9,13 +11,16 @@ const links = [
 ];
 
 export default function Header() {
+	const dispatch = useDispatch();
+	const isLogin = useSelector((state) => state.auth.success);
+
 	return (
 		<nav
 			className={`navbar navbar-expand-lg bg-primary ${styles.navbarAnimated}`}
 			data-bs-theme="dark"
 		>
 			<div className="container-fluid">
-				<Link to=""
+				<Link to="/"
 					  className="navbar-brand"
 				>Movie finder</Link>
 
@@ -41,17 +46,21 @@ export default function Header() {
 					</ul>
 
 					<ul className="navbar-nav">
-						<li className="nav-item">
-							<Link to="/login" className="btn btn-outline-light btn-lg" role="button">
-								Log In
-							</Link>
-						</li>
+						{!isLogin && (
+							<li className="nav-item">
+								<Link to="/login" className="btn btn-outline-light btn-lg" role="button">
+									Log In
+								</Link>
+							</li>
+						)}
 
-						<li className="nav-item">
-							<button type="button" className="btn btn-outline-light btn-lg">
-								Log out
-							</button>
-						</li>
+						{isLogin && (
+							<li className="nav-item">
+								<button type="button" className="btn btn-outline-light btn-lg" onClick={() => dispatch(logout())}>
+									Log out
+								</button>
+							</li>
+						)}
 					</ul>
 				</div>
 			</div>

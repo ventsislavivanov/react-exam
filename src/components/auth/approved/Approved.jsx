@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../../store/authSlice.js";
+import { login } from "../../../store/authSlice.js";
 import { createSession } from "../../../services/authServices.js";
 
 export default function Approved() {
@@ -15,20 +15,24 @@ export default function Approved() {
 
 		if (!requestToken) return;
 
-		async function run() {
-			const response = await createSession(requestToken);
-			const { session_id, success } = response;
+		(async () => {
+			try {
+				const response = await createSession(requestToken);
+				const { session_id, success } = response;
 
-			dispatch(loginSuccess({ sessionId: session_id, success }));
+				dispatch(login({ sessionId: session_id, success }));
 
-			if (returnUrl) {
-				navigate(returnUrl);
-			} else {
-				navigate("/dashboard");
+				if (returnUrl) {
+					navigate(returnUrl);
+				} else {
+					navigate("/");
+				}
 			}
-		}
+			catch (e) {
+				console.error(e);
+			}
+		})();
 
-		run();
 	}, [dispatch, navigate, searchParams]);
 
 	return null;

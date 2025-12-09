@@ -11,6 +11,7 @@ import SignUp from "./components/auth/sign-up/SignUp.jsx";
 import MovieDetails from "./components/movies/movie-details/MovieDetails.jsx";
 import Approved from "./components/auth/approved/Approved.jsx";
 import Searched from "./components/movies/searched/Searched.jsx";
+import PrivateRoute from "./components/private-route/PrivateRoute.jsx";
 
 function App() {
 
@@ -20,7 +21,11 @@ function App() {
 
 			<Routes>
 				<Route path="/" element={<Dashboard/>}/>
-				<Route path="/favorite-movies" element={<Favorites/>}/>
+				<Route path="/favorite-movies" element={
+					<PrivateRoute>
+						<Favorites/>
+					</PrivateRoute>
+				}/>
 				<Route path="/movies/:searchQuery/searched" element={<Searched/>}/>
 				<Route path="/movie/:movieId/details" element={<MovieDetails/>}/>
 				<Route path="/about-us" element={<AboutUs/>}/>
