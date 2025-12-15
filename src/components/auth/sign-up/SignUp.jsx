@@ -2,6 +2,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
 import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
 import { validationRules as vr} from "../../../helpers/validationRules.js";
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import { auth, db } from "../../../configs/firebase.js";
+import { doc, setDoc } from "firebase/firestore"
+import { useEffect } from "react";
+import { login } from "../../../store/authSlice.js";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
 
 const intialValues = {
 	fullName: '',
@@ -13,6 +20,9 @@ const intialValues = {
 	dob: ''
 }
 export default function SignUp() {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const methods = useForm({
 		defaultValues: intialValues,
 		mode: 'onTouched',
@@ -23,12 +33,34 @@ export default function SignUp() {
 	const {
 		handleSubmit,
 		reset,
-		watch
+		watch,
+		setValue
 	} = methods;
 
-	const registerHandler = () => {
-		console.log('in')
-		reset();
+	const registerHandler = async (data) => {
+		const { fullName, email, password, pin, address, dob } = data;
+
+		try {
+			const { user } = await createUserWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+
+			await setDoc(doc(db, "users", user.uid), {
+				fullName,
+				email,
+				pin,
+				address,
+				dob
+			});
+
+			reset();
+			dispatch(login(user));
+			navigate('/');
+		} catch (err) {
+			alert(err.message);
+		}
 	}
 
 	const onInvalid = (errors) => {
@@ -52,7 +84,7 @@ export default function SignUp() {
 		},
 		password: {
 			required: 'Password is required',
-			minLength: { value: 3, message: 'Password must be at least 3 characters long' },
+			minLength: { value: 6, message: 'Password must be at least 6 characters long' },
 			maxLength: { value: 10, message: 'Password must be at most 10 characters long' },
 			pattern: {
 				value: /[A-Za-z0-9]/,
@@ -81,6 +113,43 @@ export default function SignUp() {
 			required: 'Gender is required'
 		},
 	}
+
+	const extractBirthDate = (pin) => {
+		let year = pin.substring(0, 2);
+		let month = pin.substring(2, 4);
+		const day = pin.substring(4, 6);
+
+		if (month >= 40 && month <= 52) {
+			month = month - 40;
+			year = 20 + year;
+		}
+		else if (month >= 20 && month <= 32) {
+			month = month - 20;
+			year = 18 + year;
+		}
+		else if (month >= 1 && month <= 12) {
+			month = +month;
+			year = 19 + year;
+		}
+
+		if (month <= 9)
+			month = `0${month}`;
+
+		return `${day}/${month}/${year}`;
+	}
+
+	const pinValue = watch('pin') || '';
+
+	useEffect(() => {
+		if (!pinValue || pinValue.length < 6) {
+			setValue('dob', '', { shouldValidate: true, shouldDirty: true });
+			return;
+		}
+
+		const dob = extractBirthDate(pinValue);
+		setValue('dob', dob, { shouldValidate: true, shouldDirty: true });
+
+	}, [pinValue, setValue]);
 
 	return (
 		<div className="container">
@@ -160,6 +229,7 @@ export default function SignUp() {
 												rules={buildFieldRules.dob}
 												placeholder="Date of Birth"
 												icon={['fas', 'calendar']}
+												disabled={true}
 											/>
 										</div>
 									</div>

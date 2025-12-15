@@ -1,15 +1,19 @@
-import { Link, useSearchParams } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
-import { generationRequestToken, buildAuthUrl } from "../../../services/authServices.js";
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../../../configs/firebase.js";
+import { login } from "../../../store/authSlice.js";
+import { useDispatch } from "react-redux";
 
 const intialValues = {
-	username: 'vivanovspam',
-	password: 'eUXz5@Zn#0'
+	email: '',
+	password: ''
 };
 
 export default function Login() {
-	const [searchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const methods = useForm({
 		defaultValues: intialValues,
@@ -23,17 +27,16 @@ export default function Login() {
 		reset
 	} = methods;
 
-	const loginHandler = async () => {
+	const loginHandler = async (data) => {
+		const { email, password } = data;
 		try {
-			const { request_token } = await generationRequestToken();
-			const returnUrl = searchParams.get("returnUrl") || undefined;
+			await signInWithEmailAndPassword(auth, email, password);
 
-			const authUrl = await buildAuthUrl(request_token, returnUrl);
-			window.location.href = authUrl;
-		} catch (err) {
-			console.error(err);
-		} finally {
 			reset();
+			dispatch(login({ email }));
+			navigate('/');
+		} catch (err) {
+			alert(err.message)
 		}
 	};
 
@@ -42,13 +45,17 @@ export default function Login() {
 	};
 
 	const buildFieldRules = {
-		username: {
-			required: 'Username is required',
-			minLength: { value: 6, message: 'Username must be at least 8 characters long' }
+		email: {
+			required: 'Email is required',
+			minLength: { value: 6, message: 'Email must be at least 8 characters long' },
+			pattern: {
+				value: /\S+@\S+\.\S+/,
+				message: "Entered value does not match email format"
+			},
 		},
 		password: {
 			required: 'Password is required',
-			minLength: { value: 3, message: 'Password must be at least 3 characters long' }
+			minLength: { value: 6, message: 'Password must be at least 6 characters long' }
 		}
 	};
 
@@ -63,10 +70,10 @@ export default function Login() {
 					<FormProvider {...methods}>
 						<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
 							<FormInput
-								name="username"
+								name="email"
 								rules={buildFieldRules.username}
-								placeholder="Place enter username..."
-								label="Username"
+								placeholder="Place enter email..."
+								label="Email"
 								icon={['fas', 'user']}
 							/>
 

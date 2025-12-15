@@ -1,6 +1,9 @@
 import axiosTheMovieDb from "../configs/axios.js";
 import { apiKey } from "../configs/api.js";
 
+import { signOut } from 'firebase/auth';
+import { auth } from '../configs/firebase.js'
+
 export async function generationRequestToken() {
 	try {
 		const response = await axiosTheMovieDb.get(`authentication/token/new?${apiKey}`);
@@ -11,13 +14,6 @@ export async function generationRequestToken() {
 	}
 }
 
-export async function buildAuthUrl(requestToken, returnUrl) {
-	const baseApproved = 'http://localhost:5173/approved';
-	const approvedWithReturn = returnUrl
-		? `${baseApproved}?returnUrl=${encodeURIComponent(returnUrl)}`
-		: baseApproved;
-	return `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${encodeURIComponent(approvedWithReturn)}`;
-}
 
 export async function createSession(requestToken) {
 	try {
@@ -52,4 +48,8 @@ export async function deleteSession(sessionId) {
 
 export function  getToken() {
 	return "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlY2U1MTM1NzA4NjlhNTJiNzI1NTRhNThjMGQ3OTI0OCIsIm5iZiI6MTczNjE1NDY4Mi40ODgsInN1YiI6IjY3N2I5ZTNhZDliMGU3MGQ1ZDcyNDcwMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IEFrQNmFDvlOqsGtAAkguAd_xbXyQiZpB_59XUJMrvw";
+}
+
+export async function logoutFirebase() {
+	await signOut(auth);
 }

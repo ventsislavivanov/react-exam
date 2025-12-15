@@ -1,7 +1,8 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import styles from './Header.module.css';
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/authSlice.js";
+import { logoutFirebase } from "../../services/authServices.js";
 
 const links = [
 	{ name: '', label: 'Movie' },
@@ -11,8 +12,20 @@ const links = [
 ];
 
 export default function Header() {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const isLogin = useSelector((state) => state.auth.success);
+	const isAuth = useSelector((s) => s.auth.isAuth);
+	const loggedUserEmail = useSelector((s) => s.auth.user?.email);
+
+	const logoutHandle = async () => {
+		try {
+			await logoutFirebase();
+			dispatch(logout());
+			navigate('/login');
+		} catch (err) {
+			alert(err.message);
+		}
+	};
 
 	return (
 		<nav
@@ -46,27 +59,21 @@ export default function Header() {
 					</ul>
 
 					<ul className="navbar-nav">
-						{!isLogin && (
-							<li className="nav-item">
-								<Link to="/login"
-									  className="btn btn-outline-light btn-lg"
-									  role="button"
-								>
-									Log In
-								</Link>
-							</li>
-						)}
+						{isAuth
+							? (
+								<>
+									<span className="navbar-text">{loggedUserEmail}</span>
+									<button type="button" className="btn btn-outline-light btn-lg" onClick={logoutHandle}>Log out</button>
+								</>
+							)
+							: (
+								<>
+									<Link to="/login" className="btn btn-outline-light btn-lg m-1" role="button">Log In</Link>
 
-						{isLogin && (
-							<li className="nav-item">
-								<button type="button"
-										className="btn btn-outline-light btn-lg"
-										onClick={() => dispatch(logout())}
-								>
-									Log out
-								</button>
-							</li>
-						)}
+									<Link to="/sign-up" className="btn btn-outline-light btn-lg m-1" role="button">Sign up</Link>
+								</>
+							)
+						}
 					</ul>
 				</div>
 			</div>
