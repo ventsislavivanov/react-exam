@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { getSearchMovie } from "../../../services/movieServices.js";
-import MovieCard from "../movie-card/MovieCard.jsx";
+import { getSearchMovie } from "../../services/movieServices.js";
+import MovieCard from "../../components/movie-card/MovieCard.jsx";
 
 export default function Searched() {
 	const { searchQuery } = useParams();

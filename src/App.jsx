@@ -7,16 +7,16 @@ import { login, logout } from "./store/authSlice";
 
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer.jsx";
-import Dashboard from "./components/movies/dashboard/Dashboard.jsx";
-import Favorites from "./components/movies/favorites/Favorites.jsx";
-import AboutUs from "./components/about-us/AboutUs.jsx";
-import ContactUs from "./components/contact-us/ContactUs.jsx";
-import Login from "./components/auth/login/Login.jsx";
-import SignUp from "./components/auth/sign-up/SignUp.jsx";
-import MovieDetails from "./components/movies/movie-details/MovieDetails.jsx";
-import Approved from "./components/auth/approved/Approved.jsx";
-import Searched from "./components/movies/searched/Searched.jsx";
 import PrivateRoute from "./components/private-route/PrivateRoute.jsx";
+
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import Favorites from "./pages/favorites/Favorites.jsx";
+import Searched from "./pages/searched/Searched.jsx";
+import MovieDetails from "./pages/movie-details/MovieDetails.jsx";
+import AboutUs from "./pages/about-us/AboutUs.jsx";
+import ContactUs from "./pages/contact-us/ContactUs.jsx";
+import Login from "./pages/login/Login.jsx";
+import SignUp from "./pages/sign-up/SignUp.jsx";
 
 function App() {
 	const dispatch = useDispatch();
@@ -50,7 +50,6 @@ function App() {
 				<Route path="/contact-us" element={<ContactUs/>}/>
 				<Route path="/login" element={<Login/>}/>
 				<Route path="/sign-up" element={<SignUp/>}/>
-				<Route path="/approved" element={<Approved/>}/>
 			</Routes>
 
 			<Footer />

@@ -1,8 +1,7 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import { getMovieDetails } from "../../../services/movieServices.js";
-const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
-const IMAGE_RESOLUTION = 'w500';
+import { getMovieDetails } from "../../services/movieServices.js";
+
 
 const initialMovie = {
 	title: '',
@@ -26,7 +25,7 @@ export default function MovieDetails() {
 	}, [movieId]);
 
 	const posterPath = movie.poster_path
-		? BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path
+		? 'https://image.tmdb.org/t/p/w500' + movie.poster_path
 		: '';
 
 	const genreNames = movie.genres.map(g => g.name).join(', ');
@@ -55,10 +54,10 @@ export default function MovieDetails() {
 				<li className="list-group-item">
 					Release Date: {movie.release_date}
 				</li>
+
 				<li className="list-group-item">
 					Overview: {movie.overview}
 				</li>
-
 
 				<a href={movie.homepage}
 					  target="_blank"

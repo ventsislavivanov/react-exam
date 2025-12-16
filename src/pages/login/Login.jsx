@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { FormProvider, useForm } from "react-hook-form";
-import FormInput from "../../form-elements/form-input/FormInput.jsx";
+import FormInput from "../../components/form-elements/form-input/FormInput.jsx";
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../../../configs/firebase.js";
-import { login } from "../../../store/authSlice.js";
+import { auth } from "../../configs/firebase.js";
+import { login } from "../../store/authSlice.js";
 import { useDispatch } from "react-redux";
-import { loginRules } from "../../../formValidations";
+import { loginRules } from "../../formValidations/index.js";
 
 const intialValues = {
 	email: '',

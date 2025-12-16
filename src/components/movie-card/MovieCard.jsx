@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import styles from './MovieCard.module.css';
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFavorite } from "../../../store/favoritesSlice";
+import { toggleFavorite } from "../../store/favoritesSlice.js";
 
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 const IMAGE_RESOLUTION = 'w500';

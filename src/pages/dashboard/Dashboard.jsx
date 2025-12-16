@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import MovieCard from "../movie-card/MovieCard.jsx";
+import MovieCard from "../../components/movie-card/MovieCard.jsx";
 import {
 	getBestDramaMovies,
 	getInTheaterMovies,
 	getKidsMovies,
 	getPopularMovies,
-} from "../../../services/movieServices.js";
-import Jumbotron from "../jumbotron/Jumbotron.jsx";
+} from "../../services/movieServices.js";
+import Jumbotron from "../../components/jumbotron/Jumbotron.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { loadFavorites, selectFavorites } from "../../../store/favoritesSlice";
+import { loadFavorites, selectFavorites } from "../../store/favoritesSlice.js";
 
 export default function Dashboard() {
 	const dispatch = useDispatch();

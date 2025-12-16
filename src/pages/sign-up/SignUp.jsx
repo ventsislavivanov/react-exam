@@ -1,15 +1,15 @@
 import { FormProvider, useForm } from "react-hook-form";
-import FormInput from "../../form-elements/form-input/FormInput.jsx";
-import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
+import FormInput from "../../components/form-elements/form-input/FormInput.jsx";
+import FormRadio from "../../components/form-elements/form-radio/FormRadio.jsx";
 import { createUserWithEmailAndPassword } from "firebase/auth"
-import { auth, db } from "../../../configs/firebase.js";
+import { auth, db } from "../../configs/firebase.js";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore"
 import { useEffect } from "react";
-import { login } from "../../../store/authSlice.js";
+import { login } from "../../store/authSlice.js";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { makeSignUpRules } from "../../../formValidations";
-import { egnValidate } from "../../../validators";
+import { makeSignUpRules } from "../../formValidations/index.js";
+import { egnValidate } from "../../validators/index.js";
 
 const intialValues = {
 	fullName: '',

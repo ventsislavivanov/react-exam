@@ -1,7 +1,7 @@
-import MovieCard from "../movie-card/MovieCard.jsx";
+import MovieCard from "../../components/movie-card/MovieCard.jsx";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loadFavorites, selectFavorites, selectFavoritesLoading } from "../../../store/favoritesSlice";
+import { loadFavorites, selectFavorites, selectFavoritesLoading } from "../../store/favoritesSlice.js";
 
 export default function Favorites() {
     const dispatch = useDispatch();

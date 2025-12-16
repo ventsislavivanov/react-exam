@@ -1,4 +1,4 @@
-import FormInput from "../../form-elements/form-input/FormInput.jsx";
+import FormInput from "../form-elements/form-input/FormInput.jsx";
 import { FormProvider, useForm } from "react-hook-form";
 import styles from './Jumbotron.module.css';
 import { useNavigate } from "react-router";
