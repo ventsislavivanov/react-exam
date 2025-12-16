@@ -1,5 +1,5 @@
 
-const isValidEGN = function (egn) {
+export function egnValidate(egn) {
 	if (egn === null || egn === '') {
 		return true;
 	}
@@ -72,6 +72,3 @@ const checkDate = function(month, day, year) {
 	return d.getFullYear() === year && (d.getMonth() + 1) === month && d.getDate() === Number(day);
 }
 
-export const validationRules = Object.freeze({
-	egn: isValidEGN,
-});

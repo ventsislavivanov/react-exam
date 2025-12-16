@@ -1,7 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import FormInput from "../../form-elements/form-input/FormInput.jsx";
 import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
-import { validationRules as vr} from "../../../helpers/validationRules.js";
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../../configs/firebase.js";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore"
@@ -10,6 +9,7 @@ import { login } from "../../../store/authSlice.js";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { makeSignUpRules } from "../../../formValidations";
+import { egnValidate } from "../../../validators";
 
 const intialValues = {
 	fullName: '',
@@ -75,7 +75,7 @@ export default function SignUp() {
 
 	const buildFieldRules = makeSignUpRules({
 		getValues,
-		egnValidate: vr.egn,
+		egnValidate,
 	});
 
 	const extractBirthDate = (pin) => {

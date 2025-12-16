@@ -34,7 +34,7 @@ export const makeSignUpRules = ({ getValues, egnValidate }) => {
 		},
 		pin: {
 			required: 'EGN is required',
-			validate: (val) => egnValidate(val) || 'Invalid EGN',
+			validate: (val) => egnValidate(val) || 'EGN is invalid',
 		},
 		address: { required: 'Address is required' },
 		dob: { required: 'Date of Birth is required' },
