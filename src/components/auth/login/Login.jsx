@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../../../configs/firebase.js";
 import { login } from "../../../store/authSlice.js";
 import { useDispatch } from "react-redux";
+import { loginRules } from "../../../formValidations";
 
 const intialValues = {
 	email: '',
@@ -47,20 +48,7 @@ export default function Login() {
 		console.log(errors);
 	};
 
-	const buildFieldRules = {
-		email: {
-			required: 'Email is required',
-			minLength: { value: 6, message: 'Email must be at least 8 characters long' },
-			pattern: {
-				value: /\S+@\S+\.\S+/,
-				message: "Entered value does not match email format"
-			},
-		},
-		password: {
-			required: 'Password is required',
-			minLength: { value: 6, message: 'Password must be at least 6 characters long' }
-		}
-	};
+	const buildFieldRules = loginRules;
 
 	return (
 		<div className="container">
@@ -74,7 +62,7 @@ export default function Login() {
 						<form onSubmit={handleSubmit(loginHandler, onInvalid)}>
 							<FormInput
 								name="email"
-								rules={buildFieldRules.username}
+								rules={buildFieldRules.email}
 								placeholder="Place enter email..."
 								label="Email"
 								icon={['fas', 'user']}
