@@ -5,11 +5,7 @@ import { useNavigate } from "react-router";
 
 const intialValues = { searchQuery: ''};
 
-export default function Jumbotron({
-	title,
-	description,
-	callToAction
-}) {
+export default function Jumbotron() {
 	const navigate = useNavigate();
 
 	const methods = useForm({
@@ -54,13 +50,13 @@ export default function Jumbotron({
 			<div className={`${styles.overlay}`}></div>
 			<div className="container">
 				<div className={`p-5 ${styles.content}`}>
-					<h1 className="display-4 text-light">{ title }</h1>
+					<h1 className="display-4 text-light">Find the Perfect Movie for Any Mood!</h1>
 
-					<p className="lead text-center">{ description }</p>
+					<p className="lead text-center">Explore a world of movies at your fingertips. Search for your favorite titles or discover new ones to fall in love with. Start your journey today!</p>
 
 					<hr className="my-4" />
 
-					<p className="text-center">{ callToAction }</p>
+					<p className="text-center">Looking for the perfect movie? Our platform makes it easy to search, discover, and save your favorite films. Join now and dive into the world of cinema.</p>
 
 
 					<FormProvider {...methods}>

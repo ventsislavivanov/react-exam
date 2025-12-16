@@ -4,21 +4,18 @@ import styles from './MovieCard.module.css';
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../../store/favoritesSlice.js";
 
-const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
-const IMAGE_RESOLUTION = 'w500';
-
 export default function MovieCard(
     {movie, isFavorite = false}
 ) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-	const posterPath = BASE_IMAGE_URL + IMAGE_RESOLUTION + movie.poster_path;
+	const posterPath = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
 
- const isLogin = useSelector((state) => state.auth.success);
+	const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
 
- const addFavoriteHandler= () => {
-        if (!isLogin) return;
+ 	const addFavoriteHandler= () => {
+        if (!isAuthenticated) return;
         dispatch(toggleFavorite({ movie, favorite: !isFavorite }));
     };
 
@@ -54,7 +51,7 @@ export default function MovieCard(
 					<FontAwesomeIcon icon={['fas', 'eye']}/>
 				</button>
 
-				{isLogin && (
+				{isAuthenticated && (
 					<button
 						type="button"
 						className={`btn ${!isFavorite ? 'btn-outline-primary' : 'btn-primary'}`}

@@ -34,7 +34,7 @@ export async function getKidsMovies() {
 	}
 }
 
-export async function getBestDramaMovies() {
+export async function getDramaMovies() {
 	try {
 		const response = await axiosTheMovieDb.get(`discover/movie?with_genres=18&primary_release_year=2019&${apiKey}`);
 		return response.data.results.slice(0, 6);
