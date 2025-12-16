@@ -30,10 +30,13 @@ export default function Login() {
 	const loginHandler = async (data) => {
 		const { email, password } = data;
 		try {
-			await signInWithEmailAndPassword(auth, email, password);
+			const { user } = await signInWithEmailAndPassword(auth, email, password);
 
 			reset();
-			dispatch(login({ email }));
+			dispatch(login({
+				uid: user.uid,
+				email: user.email,
+			}));
 			navigate('/');
 		} catch (err) {
 			alert(err.message)

@@ -13,7 +13,29 @@ import Approved from "./components/auth/approved/Approved.jsx";
 import Searched from "./components/movies/searched/Searched.jsx";
 import PrivateRoute from "./components/private-route/PrivateRoute.jsx";
 
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './configs/firebase';
+import { login, logout } from './store/authSlice';
+
 function App() {
+	const dispatch = useDispatch();
+	const [bootstrapped, setBootstrapped] = useState(false);
+
+	useEffect(() => {
+		const unsub = onAuthStateChanged(auth, (user) => {
+			if (user) {
+				dispatch(login({ uid: user.uid, email: user.email }));
+			} else {
+				dispatch(logout());
+			}
+			setBootstrapped(true);
+		});
+		return () => unsub();
+	}, [dispatch]);
+
+	if (!bootstrapped) return <div className="container">Loading...</div>;
 
 	return (
 		<>

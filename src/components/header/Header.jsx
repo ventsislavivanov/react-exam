@@ -14,8 +14,8 @@ const links = [
 export default function Header() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const isAuth = useSelector((s) => s.auth.isAuth);
-	const loggedUserEmail = useSelector((s) => s.auth.user?.email);
+	const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
+	const userEmail = useSelector((s) => s.auth.user?.email);
 
 	const logoutHandle = async () => {
 		try {
@@ -59,12 +59,12 @@ export default function Header() {
 					</ul>
 
 					<ul className="navbar-nav">
-						{isAuth
+						{isAuthenticated
 							? (
-								<>
-									<span className="navbar-text">{loggedUserEmail}</span>
+								<div className="align-items-center d-flex">
+									<strong className="navbar-text p-1">{userEmail}</strong>
 									<button type="button" className="btn btn-outline-light btn-lg" onClick={logoutHandle}>Log out</button>
-								</>
+								</div>
 							)
 							: (
 								<>

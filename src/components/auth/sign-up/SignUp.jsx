@@ -4,7 +4,7 @@ import FormRadio from "../../form-elements/form-radio/FormRadio.jsx";
 import { validationRules as vr} from "../../../helpers/validationRules.js";
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth, db } from "../../../configs/firebase.js";
-import { doc, setDoc } from "firebase/firestore"
+import { doc, setDoc, serverTimestamp } from "firebase/firestore"
 import { useEffect } from "react";
 import { login } from "../../../store/authSlice.js";
 import { useNavigate } from "react-router";
@@ -52,11 +52,15 @@ export default function SignUp() {
 				email,
 				pin,
 				address,
-				dob
+				dob,
+				createdAt: serverTimestamp(),
 			});
 
 			reset();
-			dispatch(login(user));
+			dispatch(login({
+				uid: user.uid,
+				email: user.email,
+			}));
 			navigate('/');
 		} catch (err) {
 			alert(err.message);
