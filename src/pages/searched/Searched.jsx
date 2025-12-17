@@ -2,6 +2,9 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { getSearchMovie } from "../../services/movieServices.js";
 import MovieCard from "../../components/movie-card/MovieCard.jsx";
+import Loading from "../../components/loading/Loading.jsx";
+import { useSelector } from "react-redux";
+import { selectFavorites } from "../../store/favoritesSlice";
 
 export default function Searched() {
 	const { searchQuery } = useParams();
@@ -9,6 +12,9 @@ export default function Searched() {
 
 	const [searchResults, setSearchResults] = useState([]);
 	const [loading, setLoading] = useState(false);
+
+	const favorites = useSelector(selectFavorites);
+	const favoriteIds = new Set(favorites.map(f => Number(f.movieId)));
 
 	useEffect(() => {
 		let isMounted = true;
@@ -36,7 +42,7 @@ export default function Searched() {
 				Results for: {decodedQuery}
 			</h2>
 
-			{loading && <p>Loading...</p>}
+			{loading && <Loading fullscreen={true} />}
 
 			{!loading && searchResults.length === 0 && (
 				<p>No results found.</p>
@@ -46,7 +52,10 @@ export default function Searched() {
 				<div className="row">
 					{searchResults.map((movie) => (
 						<div className="col-lg-2 pt-2 pb-2" key={movie.id}>
-							<MovieCard movie={movie} />
+							<MovieCard
+								movie={movie}
+								isFavorite={favoriteIds.has(Number(movie.id))}
+							/>
 						</div>
 					))}
 				</div>
