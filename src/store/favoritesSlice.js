@@ -1,77 +1,59 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { loadFavoriteMovie, toggleFavoriteMovie } from "../services/accountServices.js";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { addFavorite, removeFavorite, getFavorites } from '../services/favoritesService';
 
-const initialState = {
-	items: [],
-	loading: false,
-	error: null,
-};
+export const loadFavorites = createAsyncThunk('favorites/load', async (uid) => {
+	return await getFavorites(uid);
+});
 
-export const loadFavorites = createAsyncThunk(
-	"favorites/load",
-	async (_, { getState, rejectWithValue }) => {
-		try {
-			const sessionId = getState().auth.sessionId;
-			if (!sessionId) return [];
+export const addFavoriteThunk = createAsyncThunk('favorites/add', async ({ uid, movie }) => {
+	await addFavorite(uid, movie);
+	return { movie };
+});
 
-			const items = await loadFavoriteMovie(sessionId);
-
-			return items || [];
-		} catch (e) {
-			return rejectWithValue(e?.message || "Failed to load favorites");
-		}
-	}
-);
-
-export const toggleFavorite = createAsyncThunk(
-	"favorites/toggle",
-	async ({ movie, favorite }, { getState, rejectWithValue }) => {
-		try {
-			const sessionId = getState().auth.sessionId;
-			if (!sessionId) {
-				throw new Error("No session");
-			}
-
-			await toggleFavoriteMovie(movie.id, sessionId, favorite);
-
-			return { movie, favorite };
-		} catch (e) {
-			return rejectWithValue(e?.message || "Failed to toggle favorite");
-		}
-	}
-);
+export const removeFavoriteThunk = createAsyncThunk('favorites/remove', async ({ uid, movieId }) => {
+	await removeFavorite(uid, movieId);
+	return { movieId };
+});
 
 const favoritesSlice = createSlice({
-	name: "favorites",
-	initialState,
+	name: 'favorites',
+	initialState: { items: [], loading: false, error: null },
+	reducers: {
+		setFavorites(state, action) { state.items = action.payload; },
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(loadFavorites.pending, (state) => {
-				state.loading = true;
-				state.error = null;
+				state.loading = true; state.error = null;
 			})
 			.addCase(loadFavorites.fulfilled, (state, action) => {
+				state.items = action.payload;
 				state.loading = false;
-				state.items = action.payload || [];
 			})
 			.addCase(loadFavorites.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload || String(action.error?.message || action.error);
+				state.loading = false; state.error = action.error?.message || 'Failed to load favorites';
 			})
-			.addCase(toggleFavorite.fulfilled, (state, action) => {
-				const { movie, favorite } = action.payload;
-
-				if (favorite) {
-					const exists = state.items.some((m) => m.id === movie.id);
-					if (!exists) state.items.push(movie);
-				} else {
-					state.items = state.items.filter((m) => m.id !== movie.id);
+			.addCase(addFavoriteThunk.fulfilled, (state, action) => {
+				const movie = action.payload.movie;
+				const movieId = String(movie.id ?? movie.movieId);
+				if (!state.items.some(x => String(x.movieId) === movieId)) {
+					state.items.push({
+						movieId: Number(movieId),
+						title: movie.title,
+						poster_path: movie.poster_path,
+						vote_average: movie.vote_average ?? null,
+					});
 				}
+			})
+			.addCase(removeFavoriteThunk.fulfilled, (state, action) => {
+				state.items = state.items.filter(x => String(x.movieId) !== String(action.payload.movieId));
 			});
-	},
+	}
 });
 
+export const { setFavorites } = favoritesSlice.actions;
 export default favoritesSlice.reducer;
+
 export const selectFavorites = (state) => state.favorites.items;
 export const selectFavoritesLoading = (state) => state.favorites.loading;
 export const selectFavoritesError = (state) => state.favorites.error;

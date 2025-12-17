@@ -7,16 +7,17 @@ import {
 	useKidsMovies,
 	useDramaMovies
 } from "../../hooks/movies";
-
+import { useSelector } from "react-redux";
+import { selectFavorites } from "../../store/favoritesSlice";
 
 export default function Dashboard() {
-	// const dispatch = useDispatch();
-	// const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
-
 	const { data: popular = [], loading: popularLoading } = usePopularMovies();
 	const { data: inTheater = [], loading: inTheaterLoading } = useInTheaterMovies();
 	const { data: kids = [], loading: kidsLoading } = useKidsMovies();
 	const { data: drama = [], loading: dramaLoading } = useDramaMovies();
+
+	const favorites = useSelector(selectFavorites);
+	const favoriteIds = new Set(favorites.map(f => Number(f.movieId)));
 
 	const moviesLoading = popularLoading || inTheaterLoading || kidsLoading || dramaLoading;
 
@@ -35,7 +36,7 @@ export default function Dashboard() {
 								<div className="col-lg-2 pb-2" key={movie.id}>
 									<MovieCard
 										movie={movie}
-										isFavorite={true}
+										isFavorite={favoriteIds.has(Number(movie.id))}
 									/>
 								</div>
 							))}
@@ -48,7 +49,7 @@ export default function Dashboard() {
 								<div className="col-lg-2 pb-2" key={movie.id}>
 									<MovieCard
 										movie={movie}
-										isFavorite={false}
+										isFavorite={favoriteIds.has(Number(movie.id))}
 									/>
 								</div>
 							))}
@@ -61,7 +62,7 @@ export default function Dashboard() {
 								<div className="col-lg-2 pb-2" key={movie.id}>
 									<MovieCard
 										movie={movie}
-										isFavorite={false}
+										isFavorite={favoriteIds.has(Number(movie.id))}
 									/>
 								</div>
 							))}
@@ -74,7 +75,7 @@ export default function Dashboard() {
 								<div className="col-lg-2 pb-2" key={movie.id}>
 									<MovieCard
 										movie={movie}
-										isFavorite={false}
+										isFavorite={favoriteIds.has(Number(movie.id))}
 									/>
 								</div>
 							))}

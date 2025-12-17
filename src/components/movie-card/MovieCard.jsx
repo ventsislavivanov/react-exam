@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import styles from './MovieCard.module.css';
 import { useDispatch, useSelector } from "react-redux";
-import { toggleFavorite } from "../../store/favoritesSlice.js";
+import { addFavoriteThunk, removeFavoriteThunk } from "../../store/favoritesSlice.js";
 
 export default function MovieCard(
     {movie, isFavorite = false}
@@ -10,26 +10,38 @@ export default function MovieCard(
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-	const posterPath = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
+	const id = movie.id ?? movie.movieId;
+	const posterPath = movie.poster_path ? ('https://image.tmdb.org/t/p/w500' + movie.poster_path) : undefined;
 
-	const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
+	const { isAuthenticated, user} = useSelector((s) => s.auth);
+	const uid = user?.uid;
 
- 	const addFavoriteHandler= () => {
-        if (!isAuthenticated) return;
-        dispatch(toggleFavorite({ movie, favorite: !isFavorite }));
-    };
+	const toggleFavoriteHandler = () => {
+		if (!isAuthenticated || !uid) return;
+		if (isFavorite) {
+			dispatch(removeFavoriteThunk({ uid, movieId: id }));
+		} else {
+			dispatch(addFavoriteThunk({ uid, movie }));
+		}
+	}
 
 
 	return (
 		<div className="card mb-3 h-100 d-flex flex-column">
 			<div className={`${styles.imageContainer} border-bottom`}>
-				<img
-					src={posterPath}
-					alt={movie.title}
-					className={`${styles.cardImgTop} user-select-none`}
-					width="100%"
-					height="200"
-				/>
+				{posterPath ? (
+					<img
+						src={posterPath}
+						alt={movie.title}
+						className={`${styles.cardImgTop} user-select-none`}
+						width="100%"
+						height="200"
+					/>
+				) : (
+					<div className="d-flex align-items-center justify-content-center bg-light" style={{ height: 200 }}>
+						<span className="text-muted">No image</span>
+					</div>
+				)}
 			</div>
 
 			<div className="card-body d-flex flex-column flex-grow-1">
@@ -55,7 +67,7 @@ export default function MovieCard(
 					<button
 						type="button"
 						className={`btn ${!isFavorite ? 'btn-outline-primary' : 'btn-primary'}`}
-						onClick={addFavoriteHandler}
+						onClick={toggleFavoriteHandler}
 					>
 						<FontAwesomeIcon icon={['fas', 'heart']} />
 					</button>
